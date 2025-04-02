@@ -1,7 +1,3 @@
-import jwt from 'jsonwebtoken';
-
-const JWT_SECRET = 'your-secret-key'; // In production, use environment variables
-
 export function middleware(request) {
   // Only protect /dashboard route
   if (request.nextUrl.pathname.startsWith('/dashboard')) {
