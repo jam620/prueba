@@ -1,8 +1,5 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import { findUser } from '../../lib/users';
-
-const JWT_SECRET = 'your-secret-key'; // In production, use environment variables
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -24,11 +21,8 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign(
-      { userId: user.id, username: user.username },
-      JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    // Create a simple token that's compatible with Edge Runtime
+    const token = Buffer.from(`${user.id}:${user.username}:${Date.now()}`).toString('base64');
 
     res.status(200).json({ token });
   } catch (error) {
